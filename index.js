@@ -24,7 +24,31 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+//convert time from path /api/
+app.get("/api/:time", function (req, res) {
+  const time = req.params.time;
+  // res.json({ time });
+  var unix = 0;
+  var utc;
+  //  console.log(typeof(time))
+  // check ifdata is valid(data should be convert to valid date)
+  if (new Date(parseInt(time)).toUTCString() == "Invalid Date") {
+    res.json({ error: "Invalid Date" });
+    return;
+  }
+  // data = milisecond
+  if (time / 1 == time) {
+    unix = parseInt(time);
+    utc = new Date(parseInt(unix)).toUTCString();
+  }
 
+  //data  =normal date format
+  else if (time / 1 != time) {
+    unix = new Date(time).getTime();
+    utc = new Date(unix).toUTCString();
+  }
+  res.json({ unix, utc });
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
